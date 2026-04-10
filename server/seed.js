@@ -1,0 +1,12 @@
+export const seedProducts = [
+  ['ASUS ProArt PA248QFV 24 inch', 'ASUS', 24, 'FHD', 'IPS', 0, 4290000, 'uploads/products/1770142714_asus_pa248qfv_gearvn_5f41282df87344cfb09d4e24b30a8d35_master.jpg', 'Color accurate monitor for study, office, and creative work.'],
+  ['ASUS VY279HGR 27 inch', 'ASUS', 27, 'FHD', 'IPS', 0, 3690000, 'uploads/products/1770142805_asus_vy279hgr_120hz_gearvn_82956fa8030e4a16a9bbfdcbdd07bebe_master.jpg', 'Smooth everyday monitor with bright colors and a clean design.'],
+  ['ASUS ProArt PA248CRV 24 inch', 'ASUS', 24, 'FHD', 'IPS', 0, 5590000, 'uploads/products/1770142841_man-hinh-asus-proart-pa248crv-24-inch-1.png_f5f89eeec36f4ca98e12a1b4fae08ace_master.jpg', 'Professional display for designers and productivity setups.'],
+  ['ASUS ProArt PA27CGRV 27 inch', 'ASUS', 27, '2K', 'IPS', 0, 8990000, 'uploads/products/1770142950_asus_pa27cgrv_gearvn_c83dfe4e85b54880a207cc6feab32eec_master.jpg', 'Sharp 2K display for workstations and content creation.'],
+  ['ASUS ProArt PA278QEV 27 inch', 'ASUS', 27, '2K', 'IPS', 0, 6490000, 'uploads/products/1770143170_asus_pa278qev_gearvn_3a45574fb7be41e48b83d4dbe9dc68fb_master.jpg', 'Balanced 2K IPS monitor for school, office, and editing.'],
+  ['ASUS ROG Strix XG32UQ 32 inch', 'ASUS', 32, '4K', 'IPS', 0, 18990000, 'uploads/products/1770143305_asus_xg32uq_gearvn_45c4567f4263401abed634921db41811_master.jpg', 'Large 4K gaming monitor with premium color and fast response.'],
+  ['ASUS ROG XG27ACMEG 27 inch', 'ASUS', 27, '2K', 'IPS', 0, 7990000, 'uploads/products/1770144216_asus_xg27acmeg-g_hatsune_miku_gearvn_cff7848d64cf4f3ea95b307f2261bca6_master.jpg', 'Gaming monitor with responsive motion and strong color coverage.'],
+  ['ASUS ROG PG27AQWP-W 27 inch', 'ASUS', 27, '2K', 'OLED', 0, 24990000, 'uploads/products/1770144249_asus_pg27aqwp-w_gearvn_ffffe2baa33b4f9092cbe4b7c94a4399_master.jpg', 'OLED gaming display with deep contrast and high refresh rate.'],
+  ['LG UltraGear 27G610A-B 27 inch', 'LG', 27, 'FHD', 'IPS', 0, 3990000, 'uploads/products/1770145538_lg_27g610a-b_gearvn_ca3c0f25f4fc4fc2ac5a891447151588_master.jpg', 'Fast monitor for competitive gaming and daily entertainment.'],
+  ['Gigabyte GS27FC2 27 inch Curved', 'Gigabyte', 27, 'FHD', 'VA', 1, 3590000, 'uploads/products/1770146082_giga_gs27fc2_gearvn_6e007884bd7749f1bfd874b5b772e19b_master.jpg', 'Curved VA monitor with immersive contrast for gaming setups.'],
+]
