@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../state'
 
-function AuthLayout({ title, subtitle, backTo = '/', backLabel = 'Ve trang chu', children }) {
+function AuthLayout({ title, subtitle, backTo = '/', backLabel = 'Back to home', children }) {
   return (
     <section className="auth-page">
       <div className="auth-art">
@@ -13,8 +13,8 @@ function AuthLayout({ title, subtitle, backTo = '/', backLabel = 'Ve trang chu',
             <small>Monitor store</small>
           </span>
         </Link>
-        <h1>Man hinh moi cho goc setup gon hon.</h1>
-        <p>Dang nhap de theo doi don hang, cap nhat ho so va nhan ho tro nhanh qua live chat.</p>
+        <h1>Your next monitor, set up the right way.</h1>
+        <p>Sign in to track orders, update your profile, and get faster support through live chat.</p>
       </div>
 
       <div className="auth-card">
@@ -43,20 +43,20 @@ export function Login() {
       const nextUser = await login(form)
       navigate(nextUser.role === 'admin' ? '/admin' : '/')
     } catch (err) {
-      setError(err.response?.data?.message || 'Khong dang nhap duoc.')
+      setError(err.response?.data?.message || 'Unable to sign in.')
     }
   }
 
   return (
-    <AuthLayout title="Login" subtitle="Dung tai khoan cua ban de tiep tuc mua sam.">
+    <AuthLayout title="Login" subtitle="Use your account to continue shopping.">
       <form className="form-stack" onSubmit={submit}>
         {error && <div className="alert">{error}</div>}
         <label>Email<input value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} type="email" required /></label>
         <label>Password<input value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} type="password" required /></label>
-        <button className="solid-btn">Dang nhap</button>
+        <button className="solid-btn">Sign in</button>
       </form>
-      <p className="auth-switch">Chua co tai khoan? <Link to="/register">Tao tai khoan</Link></p>
-      <p className="auth-switch">Ban la quan tri vien? <Link to="/admin/login">Vao khu quan tri</Link></p>
+      <p className="auth-switch">No account yet? <Link to="/register">Create one</Link></p>
+      <p className="auth-switch">Are you an admin? <Link to="/admin/login">Open admin login</Link></p>
     </AuthLayout>
   )
 }
@@ -77,20 +77,20 @@ export function Register() {
       await register(form)
       navigate('/')
     } catch (err) {
-      setError(err.response?.data?.message || 'Khong tao duoc tai khoan.')
+      setError(err.response?.data?.message || 'Unable to create your account.')
     }
   }
 
   return (
-    <AuthLayout title="Register" subtitle="Tao tai khoan de checkout nhanh va xem lich su don hang.">
+    <AuthLayout title="Register" subtitle="Create an account for faster checkout and order history.">
       <form className="form-stack" onSubmit={submit}>
         {error && <div className="alert">{error}</div>}
-        <label>Ho va ten<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>
+        <label>Full name<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>
         <label>Email<input value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} type="email" required /></label>
-        <label>Mat khau<input value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} type="password" minLength="6" required /></label>
-        <button className="solid-btn">Tao tai khoan</button>
+        <label>Password<input value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} type="password" minLength="6" required /></label>
+        <button className="solid-btn">Create account</button>
       </form>
-      <p className="auth-switch">Da co tai khoan? <Link to="/login">Dang nhap</Link></p>
+      <p className="auth-switch">Already have an account? <Link to="/login">Sign in</Link></p>
     </AuthLayout>
   )
 }
@@ -112,27 +112,27 @@ export function AdminLogin() {
       const nextUser = await login(form)
       if (nextUser.role !== 'admin') {
         logout()
-        setError('Tai khoan nay khong co quyen quan tri.')
+        setError('This account does not have admin access.')
         return
       }
       navigate('/admin')
     } catch (err) {
-      setError(err.response?.data?.message || 'Khong dang nhap duoc vao khu quan tri.')
+      setError(err.response?.data?.message || 'Unable to sign in to the admin area.')
     }
   }
 
   return (
     <AuthLayout
       title="Admin Login"
-      subtitle="Dang nhap de quan ly san pham, don hang va live chat."
+      subtitle="Sign in to manage products, orders, analytics, and live chat."
       backTo="/login"
-      backLabel="Ve dang nhap khach hang"
+      backLabel="Back to customer login"
     >
       <form className="form-stack" onSubmit={submit}>
         {error && <div className="alert">{error}</div>}
-        <label>Email quan tri<input value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} type="email" required /></label>
-        <label>Mat khau<input value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} type="password" required /></label>
-        <button className="solid-btn">Vao khu quan tri</button>
+        <label>Admin email<input value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} type="email" required /></label>
+        <label>Password<input value={form.password} onChange={(event) => setForm({ ...form, password: event.target.value })} type="password" required /></label>
+        <button className="solid-btn">Open admin panel</button>
       </form>
     </AuthLayout>
   )

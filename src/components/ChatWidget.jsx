@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
 
 const quickStarts = [
-  { label: 'Tu van gaming', message: 'Minh can tu van man hinh gaming.' },
-  { label: 'Bao gia nhanh', message: 'Minh muon duoc bao gia nhanh.' },
-  { label: 'Giao hang', message: 'Cho minh hoi thoi gian giao hang.' },
+  { label: 'Gaming advice', message: 'I need advice for a gaming monitor.' },
+  { label: 'Quick quote', message: 'I would like a quick price quote.' },
+  { label: 'Delivery', message: 'Can you tell me the delivery time?' },
 ]
 
 function bubbleClass(type) {
@@ -87,14 +87,14 @@ export default function ChatWidget() {
           <div className="chat-head">
             <div>
               <strong>NavShop Support</strong>
-              <span>{conversation?.status === 'admin' ? 'Admin dang ho tro' : 'NavBot tra loi truoc'}</span>
+              <span>{conversation?.status === 'admin' ? 'An admin is helping you' : 'NavBot replies first'}</span>
             </div>
-            <button onClick={() => setOpen(false)} aria-label="Dong chat">x</button>
+            <button onClick={() => setOpen(false)} aria-label="Close chat">x</button>
           </div>
 
           <div className="chat-name-row">
-            <input value={name} onChange={(event) => saveName(event.target.value)} onBlur={persistName} placeholder="Ten cua ban" />
-            <button onClick={requestAdmin}>Chat voi admin</button>
+            <input value={name} onChange={(event) => saveName(event.target.value)} onBlur={persistName} placeholder="Your name" />
+            <button onClick={requestAdmin}>Chat with admin</button>
           </div>
 
           <div className="chat-shortcuts">
@@ -116,8 +116,8 @@ export default function ChatWidget() {
           </div>
 
           <form className="chat-form" onSubmit={sendMessage}>
-            <input value={text} onChange={(event) => setText(event.target.value)} placeholder="Nhap tin nhan..." />
-            <button>Gui</button>
+            <input value={text} onChange={(event) => setText(event.target.value)} placeholder="Type your message..." />
+            <button>Send</button>
           </form>
         </section>
       )}

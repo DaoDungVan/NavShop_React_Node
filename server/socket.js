@@ -8,38 +8,38 @@ function botReply(message) {
   const text = message.toLowerCase()
 
   if (text.includes('gia') || text.includes('price') || text.includes('bao nhieu')) {
-    return 'Ban co the loc theo gia ngay tren trang Shop cua NavShop. Neu muon bao gia nhanh theo nhu cau gaming, van phong hoac do hoa, minh se chuyen admin ho tro.'
+    return 'You can filter by price directly on the NavShop catalog. If you want a quick quote for gaming, office, or design use, I can hand the chat over to an admin.'
   }
 
   if (text.includes('gaming')) {
-    return 'Voi nhu cau gaming, NavShop co cac mau 24 den 32 inch, FHD, 2K va OLED. Ban co the nhan them tam gia mong muon de minh goi y dung nhom san pham.'
+    return 'For gaming, NavShop carries 24 to 32 inch monitors in FHD, 2K, and OLED. Send me your budget and I can narrow the options for you.'
   }
 
   if (text.includes('do hoa') || text.includes('design')) {
-    return 'Neu ban lam do hoa hoac edit, nen uu tien man hinh IPS hoac OLED co do phan giai 2K tro len. Admin co the tu van mau phu hop hon neu ban muon.'
+    return 'For design or editing work, IPS or OLED panels with at least 2K resolution are a good fit. I can also transfer you to an admin for a more specific recommendation.'
   }
 
   if (text.includes('van phong') || text.includes('office')) {
-    return 'Voi nhu cau hoc tap va van phong, ban nen uu tien man hinh IPS 24 den 27 inch, do phan giai FHD hoac 2K de de nhin va toi uu chi phi.'
+    return 'For study or office use, a 24 to 27 inch IPS monitor with FHD or 2K resolution is usually the best balance of comfort and value.'
   }
 
   if (text.includes('ship') || text.includes('giao')) {
-    return 'Thoi gian giao hang phu thuoc vao dia chi nhan. Ban gui khu vuc nhan hang hoac bam Chat voi admin de duoc kiem tra cu the.'
+    return 'Delivery time depends on the destination. Send your area or tap Chat with admin so we can check the exact delivery estimate.'
   }
 
   if (text.includes('bao hanh') || text.includes('warranty')) {
-    return 'NavShop ban hang chinh hang va bao hanh theo hang. Neu can kiem tra chinh sach theo tung mau man hinh, minh se chuyen admin ho tro.'
+    return 'NavShop sells genuine products with official brand warranty coverage. If you need the policy for a specific monitor model, I can connect you with an admin.'
   }
 
   if (text.includes('order') || text.includes('don')) {
-    return 'Neu da dang nhap, ban co the xem don trong muc My Orders. Neu can kiem tra don cu the, ban hay chuyen sang admin.'
+    return 'If you are signed in, you can review your purchase history in My Orders. If you want help with a specific order, I can pass the chat to an admin.'
   }
 
   if (text.includes('admin') || text.includes('nhan vien') || text.includes('tu van')) {
     return null
   }
 
-  return 'Minh la NavBot. Minh co the ho tro thong tin man hinh, gia, giao hang, bao hanh va don hang. Ban cung co the bam Chat voi admin ngay trong khung chat nay.'
+  return 'I am NavBot. I can help with monitor details, pricing, delivery, warranty, and orders. You can also tap Chat with admin in this same chat box.'
 }
 
 async function addMessage(conversationId, senderType, senderName, message) {
@@ -76,7 +76,7 @@ async function getOrCreateConversation(visitorToken, visitorName = 'Guest') {
     result.insertId,
     'bot',
     'NavBot',
-    'Xin chao, minh la NavBot. Ban can tu van man hinh, bao gia, giao hang hay muon gap admin?',
+    'Hello, I am NavBot. Do you need monitor advice, a quick quote, delivery support, or an admin?',
   )
 
   const [[conversation]] = await pool.query('SELECT * FROM chat_conversations WHERE id = ?', [result.insertId])
@@ -134,7 +134,7 @@ export function registerChat(io) {
           const reply = botReply(message)
           if (reply === null) {
             await pool.query("UPDATE chat_conversations SET status = 'waiting' WHERE id = ?", [conversation.id])
-            const systemMessage = await addMessage(conversation.id, 'system', 'System', 'Da chuyen cuoc chat sang admin. Ban doi phan hoi tai day nhe.')
+            const systemMessage = await addMessage(conversation.id, 'system', 'System', 'Your conversation has been forwarded to an admin. Please wait here for the reply.')
             io.to(`chat:${conversation.id}`).emit('chat:message', systemMessage)
             io.to('admins').emit('admin:conversations', await conversationList())
           } else {
@@ -153,7 +153,7 @@ export function registerChat(io) {
     socket.on('visitor:requestAdmin', async ({ conversationId }, callback) => {
       try {
         await pool.query("UPDATE chat_conversations SET status = 'waiting' WHERE id = ?", [conversationId])
-        const msg = await addMessage(conversationId, 'system', 'System', 'Da chuyen cuoc chat sang admin. Ban doi phan hoi tai day nhe.')
+        const msg = await addMessage(conversationId, 'system', 'System', 'Your conversation has been forwarded to an admin. Please wait here for the reply.')
         io.to(`chat:${conversationId}`).emit('chat:message', msg)
         io.to('admins').emit('admin:conversations', await conversationList())
         const [[conversation]] = await pool.query('SELECT * FROM chat_conversations WHERE id = ?', [conversationId])
@@ -194,7 +194,7 @@ export function registerChat(io) {
       const user = getUser(socket)
       if (!user || user.role !== 'admin') return callback?.({ ok: false })
       await pool.query("UPDATE chat_conversations SET status = 'closed' WHERE id = ?", [conversationId])
-      const msg = await addMessage(conversationId, 'system', 'System', 'Admin da dong cuoc chat.')
+      const msg = await addMessage(conversationId, 'system', 'System', 'This conversation has been closed by an admin.')
       io.to(`chat:${conversationId}`).emit('chat:message', msg)
       io.to('admins').emit('admin:conversations', await conversationList())
       callback?.({ ok: true })

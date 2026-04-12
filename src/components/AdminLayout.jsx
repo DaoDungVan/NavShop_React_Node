@@ -25,19 +25,20 @@ export default function AdminLayout() {
         </div>
 
         <nav className="admin-menu">
-          <NavLink end to="/admin">Tong quan</NavLink>
-          <NavLink to="/admin/products">San pham</NavLink>
-          <NavLink to="/admin/orders">Don hang</NavLink>
+          <NavLink end to="/admin">Overview</NavLink>
+          <NavLink to="/admin/products">Products</NavLink>
+          <NavLink to="/admin/orders">Orders</NavLink>
+          <NavLink to="/admin/chat">Chat</NavLink>
         </nav>
 
-        <button className="ghost-btn admin-logout" onClick={handleLogout}>Dang xuat</button>
+        <button className="ghost-btn admin-logout" onClick={handleLogout}>Log out</button>
       </aside>
 
       <div className="admin-main">
         <header className="admin-topbar">
           <div>
-            <strong>Xin chao, {user.name}</strong>
-            <span>Khu vuc quan tri NavShop</span>
+            <strong>Hello, {user.name}</strong>
+            <span>NavShop admin workspace</span>
           </div>
         </header>
 

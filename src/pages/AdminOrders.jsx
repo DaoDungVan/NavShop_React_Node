@@ -13,12 +13,12 @@ export default function AdminOrders() {
     <section>
       <div className="section-title">
         <span>Admin</span>
-        <h1>Don hang</h1>
+        <h1>Orders</h1>
       </div>
 
       <div className="table-card">
         <table>
-          <thead><tr><th>Ma</th><th>Khach</th><th>Ngay</th><th>Tong</th><th></th></tr></thead>
+          <thead><tr><th>ID</th><th>Customer</th><th>Date</th><th>Total</th><th></th></tr></thead>
           <tbody>
             {orders.map((order) => (
               <tr key={order.id}>
@@ -26,7 +26,7 @@ export default function AdminOrders() {
                 <td>{order.customer_name || order.user_name || 'Guest'}</td>
                 <td>{formatDate(order.created_at)}</td>
                 <td>{money(order.total_price)}</td>
-                <td><Link to={`/admin/orders/${order.id}`}>Chi tiet</Link></td>
+                <td><Link to={`/admin/orders/${order.id}`}>Details</Link></td>
               </tr>
             ))}
           </tbody>

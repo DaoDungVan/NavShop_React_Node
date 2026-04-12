@@ -17,22 +17,22 @@ export function OrdersPage() {
     <section className="page-shell">
       <div className="section-title">
         <span>Orders</span>
-        <h1>Don hang cua toi</h1>
+        <h1>My orders</h1>
       </div>
 
       <div className="table-card">
         {orders.length === 0 ? (
-          <div className="empty-state">Ban chua co don hang.</div>
+          <div className="empty-state">You do not have any orders yet.</div>
         ) : (
           <table>
-            <thead><tr><th>Ma don</th><th>Ngay tao</th><th>Tong tien</th><th></th></tr></thead>
+            <thead><tr><th>Order ID</th><th>Created</th><th>Total</th><th></th></tr></thead>
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
                   <td>#{order.id}</td>
                   <td>{formatDate(order.created_at)}</td>
                   <td>{money(order.total_price)}</td>
-                  <td><Link to={`/orders/${order.id}`}>Chi tiet</Link></td>
+                  <td><Link to={`/orders/${order.id}`}>Details</Link></td>
                 </tr>
               ))}
             </tbody>
@@ -66,23 +66,23 @@ export function OrderDetail() {
   return (
     <section className={isAdminRoute ? '' : 'page-shell'}>
       <Link to={isAdminRoute ? '/admin/orders' : '/orders'} className="back-link">
-        {isAdminRoute ? 'Ve danh sach don quan tri' : 'Ve danh sach don'}
+        {isAdminRoute ? 'Back to admin orders' : 'Back to orders'}
       </Link>
 
       <div className="section-title">
         <span>Order #{id}</span>
-        <h1>Chi tiet don hang</h1>
+        <h1>Order details</h1>
       </div>
 
       {!order ? (
-        <div className="empty-state">Dang tai don hang...</div>
+        <div className="empty-state">Loading order...</div>
       ) : (
         <div className="table-card">
-          <div className="summary-row"><span>Nguoi nhan</span><strong>{order.customer_name}</strong></div>
-          <div className="summary-row"><span>So dien thoai</span><strong>{order.customer_phone}</strong></div>
-          <div className="summary-row"><span>Dia chi</span><strong>{order.customer_address}</strong></div>
+          <div className="summary-row"><span>Recipient</span><strong>{order.customer_name}</strong></div>
+          <div className="summary-row"><span>Phone</span><strong>{order.customer_phone}</strong></div>
+          <div className="summary-row"><span>Address</span><strong>{order.customer_address}</strong></div>
           <table>
-            <thead><tr><th>San pham</th><th>SL</th><th>Gia</th></tr></thead>
+            <thead><tr><th>Product</th><th>Qty</th><th>Price</th></tr></thead>
             <tbody>
               {items.map((item) => (
                 <tr key={item.id}>
@@ -93,7 +93,7 @@ export function OrderDetail() {
               ))}
             </tbody>
           </table>
-          <div className="summary-row total"><span>Tong cong</span><strong>{money(order.total_price)}</strong></div>
+          <div className="summary-row total"><span>Grand total</span><strong>{money(order.total_price)}</strong></div>
         </div>
       )}
     </section>

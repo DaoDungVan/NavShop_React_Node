@@ -26,7 +26,7 @@ export default function CartPage() {
       cart.clear()
       navigate(user ? `/orders/${data.orderId}` : `/checkout-success/${data.orderId}`)
     } catch (err) {
-      setError(err.response?.data?.message || 'Khong tao duoc don hang.')
+      setError(err.response?.data?.message || 'Unable to create the order.')
     }
   }
 
@@ -35,12 +35,12 @@ export default function CartPage() {
       <div>
         <div className="section-title">
           <span>Cart</span>
-          <h1>Gio hang cua ban</h1>
+          <h1>Your cart</h1>
         </div>
 
         {cart.items.length === 0 ? (
           <div className="empty-state">
-            Gio hang dang trong. <Link to="/">Tiep tuc mua sam</Link>
+            Your cart is empty. <Link to="/">Continue shopping</Link>
           </div>
         ) : (
           <div className="cart-list">
@@ -52,7 +52,7 @@ export default function CartPage() {
                   <span>{money(item.price)}</span>
                 </div>
                 <input type="number" min="1" value={item.qty} onChange={(event) => cart.changeQty(item.id, event.target.value)} />
-                <button onClick={() => cart.remove(item.id)}>Xoa</button>
+                <button onClick={() => cart.remove(item.id)}>Remove</button>
               </div>
             ))}
           </div>
@@ -61,14 +61,14 @@ export default function CartPage() {
 
       <aside className="checkout-box">
         <h2>Checkout</h2>
-        <div className="summary-row"><span>Tong tien</span><strong>{money(cart.total)}</strong></div>
+        <div className="summary-row"><span>Total</span><strong>{money(cart.total)}</strong></div>
 
         <form className="form-stack" onSubmit={checkout}>
           {error && <div className="alert">{error}</div>}
-          <label>Nguoi nhan<input value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} required /></label>
-          <label>So dien thoai<input value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} required /></label>
-          <label>Dia chi<textarea value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} required /></label>
-          <button className="solid-btn" disabled={cart.items.length === 0}>Dat hang</button>
+          <label>Recipient<input value={customer.name} onChange={(event) => setCustomer({ ...customer, name: event.target.value })} required /></label>
+          <label>Phone number<input value={customer.phone} onChange={(event) => setCustomer({ ...customer, phone: event.target.value })} required /></label>
+          <label>Address<textarea value={customer.address} onChange={(event) => setCustomer({ ...customer, address: event.target.value })} required /></label>
+          <button className="solid-btn" disabled={cart.items.length === 0}>Place order</button>
         </form>
       </aside>
     </section>

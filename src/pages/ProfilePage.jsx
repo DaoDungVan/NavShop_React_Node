@@ -35,9 +35,9 @@ export default function ProfilePage() {
     try {
       const { data } = await api.put('/auth/profile', body)
       saveSession(data)
-      setMessage('Da cap nhat ho so.')
+      setMessage('Profile updated.')
     } catch (err) {
-      setError(err.response?.data?.message || 'Khong cap nhat duoc ho so.')
+      setError(err.response?.data?.message || 'Unable to update the profile.')
     }
   }
 
@@ -49,9 +49,9 @@ export default function ProfilePage() {
     try {
       await api.put('/auth/password', passwordForm)
       setPasswordForm({ currentPassword: '', newPassword: '' })
-      setPasswordMessage('Da doi mat khau.')
+      setPasswordMessage('Password updated.')
     } catch (err) {
-      setPasswordError(err.response?.data?.message || 'Khong doi duoc mat khau.')
+      setPasswordError(err.response?.data?.message || 'Unable to change the password.')
     }
   }
 
@@ -61,44 +61,44 @@ export default function ProfilePage() {
         <img src={imageUrl(user.avatar)} alt={user.name} />
         <h1>{user.name}</h1>
         <p>{user.email}</p>
-        <Link to="/" className="back-link">Ve trang chu</Link>
+        <Link to="/" className="back-link">Back to home</Link>
       </aside>
 
       <div className="profile-panel">
         <div className="section-title">
           <span>Account</span>
-          <h2>Cap nhat thong tin</h2>
+          <h2>Update profile</h2>
         </div>
 
         <form className="form-stack" onSubmit={submit}>
           {message && <div className="notice">{message}</div>}
           {error && <div className="alert">{error}</div>}
-          <label>Ho va ten<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>
-          <label>So dien thoai<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label>
-          <label>Dia chi<textarea value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} /></label>
-          <label>Gioi tinh
+          <label>Full name<input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></label>
+          <label>Phone number<input value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></label>
+          <label>Address<textarea value={form.address} onChange={(event) => setForm({ ...form, address: event.target.value })} /></label>
+          <label>Gender
             <select value={form.gender} onChange={(event) => setForm({ ...form, gender: event.target.value })}>
-              <option value="">Khong chon</option>
-              <option value="male">Nam</option>
-              <option value="female">Nu</option>
-              <option value="other">Khac</option>
+              <option value="">Prefer not to say</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
             </select>
           </label>
-          <label>Anh dai dien<input type="file" accept="image/*" onChange={(event) => setForm({ ...form, avatar: event.target.files?.[0] })} /></label>
-          <button className="solid-btn">Luu thay doi</button>
+          <label>Avatar image<input type="file" accept="image/*" onChange={(event) => setForm({ ...form, avatar: event.target.files?.[0] })} /></label>
+          <button className="solid-btn">Save changes</button>
         </form>
 
         <div className="section-title sub-title">
           <span>Security</span>
-          <h2>Doi mat khau</h2>
+          <h2>Change password</h2>
         </div>
 
         <form className="form-stack" onSubmit={changePassword}>
           {passwordMessage && <div className="notice">{passwordMessage}</div>}
           {passwordError && <div className="alert">{passwordError}</div>}
-          <label>Mat khau hien tai<input type="password" value={passwordForm.currentPassword} onChange={(event) => setPasswordForm({ ...passwordForm, currentPassword: event.target.value })} required /></label>
-          <label>Mat khau moi<input type="password" minLength="6" value={passwordForm.newPassword} onChange={(event) => setPasswordForm({ ...passwordForm, newPassword: event.target.value })} required /></label>
-          <button className="ghost-btn">Doi mat khau</button>
+          <label>Current password<input type="password" value={passwordForm.currentPassword} onChange={(event) => setPasswordForm({ ...passwordForm, currentPassword: event.target.value })} required /></label>
+          <label>New password<input type="password" minLength="6" value={passwordForm.newPassword} onChange={(event) => setPasswordForm({ ...passwordForm, newPassword: event.target.value })} required /></label>
+          <button className="ghost-btn">Update password</button>
         </form>
       </div>
     </section>

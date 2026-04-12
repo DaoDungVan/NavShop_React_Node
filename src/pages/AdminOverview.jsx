@@ -18,27 +18,28 @@ export default function AdminOverview() {
     <section>
       <div className="section-title">
         <span>Admin</span>
-        <h1>Tong quan he thong</h1>
+        <h1>Store overview</h1>
       </div>
 
       <div className="overview-grid">
         <article className="overview-card">
           <strong>{stats.products}</strong>
-          <span>San pham dang hien thi</span>
+          <span>Live products</span>
         </article>
         <article className="overview-card">
           <strong>{stats.orders}</strong>
-          <span>Don hang da ghi nhan</span>
+          <span>Orders received</span>
         </article>
         <article className="overview-card">
           <strong>{stats.brands}</strong>
-          <span>Thuong hieu dang kinh doanh</span>
+          <span>Active brands</span>
         </article>
       </div>
 
       <div className="overview-links">
-        <Link className="solid-btn" to="/admin/products">Quan ly san pham</Link>
-        <Link className="ghost-btn" to="/admin/orders">Xem don hang</Link>
+        <Link className="solid-btn" to="/admin/products">Manage products</Link>
+        <Link className="ghost-btn" to="/admin/orders">View orders</Link>
+        <Link className="ghost-btn" to="/admin/chat">Open chat desk</Link>
       </div>
     </section>
   )

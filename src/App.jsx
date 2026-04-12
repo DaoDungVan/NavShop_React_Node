@@ -11,6 +11,7 @@ import CheckoutSuccess from './pages/CheckoutSuccess'
 import AdminProducts from './pages/AdminProducts'
 import AdminOrders from './pages/AdminOrders'
 import AdminOverview from './pages/AdminOverview'
+import AdminChat from './pages/AdminChat'
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="products" element={<AdminProducts />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="orders/:id" element={<OrderDetail />} />
+        <Route path="chat" element={<AdminChat />} />
       </Route>
 
       <Route path="/login" element={<Login />} />

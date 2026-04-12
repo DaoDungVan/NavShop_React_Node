@@ -20,7 +20,7 @@ export default function Layout() {
     <>
       <header className="site-header">
         <div className="top-strip">
-          <span>Mien phi giao hang noi thanh cho don tu 5 trieu</span>
+          <span>Free city delivery for orders above 5,000,000 VND</span>
           <span>Hotline: 0909 888 777</span>
         </div>
 
@@ -62,7 +62,7 @@ export default function Layout() {
       <footer className="footer">
         <div>
           <strong>NavShop</strong>
-          <p>Man hinh gaming, do hoa va van phong cho goc setup gon hon.</p>
+          <p>Gaming, design, and office monitors for a cleaner setup.</p>
         </div>
         <div>
           <span>Support</span>

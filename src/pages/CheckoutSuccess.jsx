@@ -7,11 +7,11 @@ export default function CheckoutSuccess() {
     <section className="page-shell narrow-page">
       <div className="success-box">
         <span className="eyebrow">Order created</span>
-        <h1>Dat hang thanh cong</h1>
-        <p>Ma don cua ban la #{id}. Admin se lien he theo so dien thoai trong thong tin giao hang.</p>
+        <h1>Your order has been placed.</h1>
+        <p>Your order number is #{id}. Our team will contact you using the phone number from the delivery details.</p>
         <div className="hero-actions">
-          <Link className="solid-btn" to="/">Tiep tuc mua sam</Link>
-          <Link className="ghost-btn" to="/login">Dang nhap de xem don</Link>
+          <Link className="solid-btn" to="/">Continue shopping</Link>
+          <Link className="ghost-btn" to="/login">Sign in to view orders</Link>
         </div>
       </div>
     </section>

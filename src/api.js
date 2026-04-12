@@ -28,7 +28,7 @@ export function money(value) {
 
 export function formatDate(value) {
   if (!value) return ''
-  return new Intl.DateTimeFormat('vi-VN', {
+  return new Intl.DateTimeFormat('en-GB', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(new Date(value))

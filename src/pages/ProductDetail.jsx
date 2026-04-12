@@ -15,8 +15,8 @@ export default function ProductDetail() {
       .finally(() => setLoading(false))
   }, [id])
 
-  if (loading) return <div className="page-shell"><div className="empty-state">Dang tai san pham...</div></div>
-  if (!product) return <div className="page-shell"><div className="empty-state">Khong tim thay san pham.</div></div>
+  if (loading) return <div className="page-shell"><div className="empty-state">Loading product...</div></div>
+  if (!product) return <div className="page-shell"><div className="empty-state">Product not found.</div></div>
 
   return (
     <section className="page-shell detail-layout">
@@ -25,10 +25,10 @@ export default function ProductDetail() {
       </div>
 
       <div className="detail-info">
-        <Link to="/" className="back-link">Ve trang shop</Link>
+        <Link to="/" className="back-link">Back to shop</Link>
         <span className="eyebrow">{product.brand}</span>
         <h1>{product.name}</h1>
-        <p>{product.description || 'Man hinh phu hop cho hoc tap, lam viec va giai tri.'}</p>
+        <p>{product.description || 'A balanced monitor for work, study, and entertainment.'}</p>
 
         <div className="spec-grid">
           <span><b>{product.size}</b> inch</span>
@@ -39,7 +39,7 @@ export default function ProductDetail() {
 
         <div className="detail-buy">
           <strong>{money(product.price)}</strong>
-          <button className="solid-btn" onClick={() => add(product)}>Them vao gio</button>
+          <button className="solid-btn" onClick={() => add(product)}>Add to cart</button>
         </div>
       </div>
     </section>
