@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import { pool } from './db.js'
 
 const jwtSecret = process.env.JWT_SECRET || 'dev_navshop_secret'
+const chatIdleResetMinutes = Number(process.env.CHAT_IDLE_RESET_MINUTES || 15)
+const chatIdleResetMs = chatIdleResetMinutes * 60 * 1000
 
 function botReply(message) {
   const text = message.toLowerCase()
@@ -88,6 +90,31 @@ async function messages(conversationId) {
   return rows
 }
 
+// When a user leaves the widget for too long, we move the conversation back to bot mode.
+function isIdleConversation(conversation) {
+  const lastActivity = conversation?.last_message_at || conversation?.updated_at || conversation?.created_at
+  if (!lastActivity) return false
+  return Date.now() - new Date(lastActivity).getTime() >= chatIdleResetMs
+}
+
+async function resetConversationToBot(conversationId) {
+  await pool.query("UPDATE chat_conversations SET status = 'bot', assigned_admin_id = NULL WHERE id = ?", [conversationId])
+  const systemMessage = await addMessage(
+    conversationId,
+    'system',
+    'System',
+    `The previous support session was inactive for ${chatIdleResetMinutes} minutes, so NavBot is active again.`,
+  )
+  const botMessage = await addMessage(
+    conversationId,
+    'bot',
+    'NavBot',
+    'Hello again. I can help with monitor advice, pricing, delivery, warranty, or orders.',
+  )
+  const [[conversation]] = await pool.query('SELECT * FROM chat_conversations WHERE id = ?', [conversationId])
+  return { conversation, resetMessages: [systemMessage, botMessage] }
+}
+
 async function conversationList() {
   const [rows] = await pool.query(`
     SELECT c.*,
@@ -115,8 +142,14 @@ export function registerChat(io) {
     socket.on('visitor:init', async ({ visitorToken, name } = {}, callback) => {
       try {
         const data = await getOrCreateConversation(visitorToken, name || 'Guest')
-        socket.join(`chat:${data.conversation.id}`)
-        callback?.({ ok: true, ...data, messages: await messages(data.conversation.id) })
+        let conversation = data.conversation
+        if (conversation.status !== 'bot' && isIdleConversation(conversation)) {
+          const reset = await resetConversationToBot(conversation.id)
+          conversation = reset.conversation
+          io.to('admins').emit('admin:conversations', await conversationList())
+        }
+        socket.join(`chat:${conversation.id}`)
+        callback?.({ ok: true, visitorToken: data.visitorToken, conversation, messages: await messages(conversation.id) })
       } catch {
         callback?.({ ok: false, message: 'Chat init failed.' })
       }
@@ -124,8 +157,18 @@ export function registerChat(io) {
 
     socket.on('visitor:message', async ({ conversationId, message }, callback) => {
       try {
-        const [[conversation]] = await pool.query('SELECT * FROM chat_conversations WHERE id = ?', [conversationId])
+        const [[currentConversation]] = await pool.query('SELECT * FROM chat_conversations WHERE id = ?', [conversationId])
+        let conversation = currentConversation
         if (!conversation || !message?.trim()) return callback?.({ ok: false })
+
+        if (conversation.status !== 'bot' && isIdleConversation(conversation)) {
+          const reset = await resetConversationToBot(conversation.id)
+          conversation = reset.conversation
+          for (const item of reset.resetMessages) {
+            io.to(`chat:${conversation.id}`).emit('chat:message', item)
+          }
+          io.to('admins').emit('admin:conversations', await conversationList())
+        }
 
         const visitorMessage = await addMessage(conversation.id, 'visitor', conversation.visitor_name || 'Guest', message.trim())
         io.to(`chat:${conversation.id}`).emit('chat:message', visitorMessage)

@@ -14,7 +14,7 @@ function bubbleClass(type) {
 }
 
 export default function ChatWidget() {
-  const socket = useMemo(() => io('/', { autoConnect: false }), [])
+  const socket = useMemo(() => io('/', { autoConnect: false, transports: ['websocket'] }), [])
   const [open, setOpen] = useState(false)
   const [conversation, setConversation] = useState(null)
   const [messages, setMessages] = useState([])
@@ -23,21 +23,26 @@ export default function ChatWidget() {
   const endRef = useRef(null)
 
   useEffect(() => {
+    // Keep the local widget state in sync with the server-side conversation state.
+    function syncConversation(visitorName = localStorage.getItem('navshop_chat_name') || 'Guest') {
+      const visitorToken = localStorage.getItem('navshop_visitor_token')
+      socket.emit('visitor:init', { visitorToken, name: visitorName }, (response) => {
+        if (!response?.ok) return
+        localStorage.setItem('navshop_visitor_token', response.visitorToken)
+        setConversation(response.conversation)
+        setMessages(response.messages || [])
+      })
+    }
+
     socket.connect()
     socket.on('chat:message', (message) => {
       setMessages((current) => (current.some((item) => item.id === message.id) ? current : [...current, message]))
     })
-
-    const visitorToken = localStorage.getItem('navshop_visitor_token')
-    const visitorName = localStorage.getItem('navshop_chat_name') || 'Guest'
-    socket.emit('visitor:init', { visitorToken, name: visitorName }, (response) => {
-      if (!response?.ok) return
-      localStorage.setItem('navshop_visitor_token', response.visitorToken)
-      setConversation(response.conversation)
-      setMessages(response.messages || [])
-    })
+    syncConversation()
+    const intervalId = setInterval(() => syncConversation(), 60_000)
 
     return () => {
+      clearInterval(intervalId)
       socket.off('chat:message')
       socket.disconnect()
     }
@@ -54,7 +59,7 @@ export default function ChatWidget() {
 
   function persistName() {
     const visitorToken = localStorage.getItem('navshop_visitor_token')
-    socket.emit('visitor:init', { visitorToken, name }, (response) => {
+    socket.emit('visitor:init', { visitorToken, name: name || 'Guest' }, (response) => {
       if (response?.conversation) setConversation(response.conversation)
     })
   }

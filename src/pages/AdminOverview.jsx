@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api } from '../api'
+import { api, money } from '../api'
 
 export default function AdminOverview() {
-  const [stats, setStats] = useState({ products: 0, orders: 0, brands: 0 })
+  const [stats, setStats] = useState({ products: 0, orders: 0, brands: 0, revenue: 0 })
 
   useEffect(() => {
     Promise.all([api.get('/products'), api.get('/orders/admin')]).then(([productsRes, ordersRes]) => {
       const products = productsRes.data.products || []
       const orders = ordersRes.data.orders || []
       const brands = new Set(products.map((item) => item.brand)).size
-      setStats({ products: products.length, orders: orders.length, brands })
+      const revenue = orders.reduce((sum, item) => sum + Number(item.total_price || 0), 0)
+      setStats({ products: products.length, orders: orders.length, brands, revenue })
     })
   }, [])
 
@@ -33,6 +34,10 @@ export default function AdminOverview() {
         <article className="overview-card">
           <strong>{stats.brands}</strong>
           <span>Active brands</span>
+        </article>
+        <article className="overview-card">
+          <strong>{money(stats.revenue)}</strong>
+          <span>Total recorded revenue</span>
         </article>
       </div>
 

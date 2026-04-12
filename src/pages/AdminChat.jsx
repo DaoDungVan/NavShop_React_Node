@@ -32,7 +32,7 @@ const quickReplies = [
 
 export default function AdminChat() {
   const { token } = useAuth()
-  const socket = useMemo(() => io('/', { autoConnect: false, auth: { token } }), [token])
+  const socket = useMemo(() => io('/', { autoConnect: false, transports: ['websocket'], auth: { token } }), [token])
   const [conversations, setConversations] = useState([])
   const [active, setActive] = useState(null)
   const [messages, setMessages] = useState([])
