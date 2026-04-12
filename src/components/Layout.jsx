@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Link, NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth, useCart } from '../state'
 import ChatWidget from './ChatWidget'
 
@@ -6,6 +6,10 @@ export default function Layout() {
   const { user, logout } = useAuth()
   const { count } = useCart()
   const navigate = useNavigate()
+
+  if (user?.role === 'admin') {
+    return <Navigate to="/admin" replace />
+  }
 
   function handleLogout() {
     logout()
@@ -39,7 +43,6 @@ export default function Layout() {
             {user ? (
               <>
                 <Link to="/profile" className="user-chip">{user.name}</Link>
-                {user.role === 'admin' && <Link className="ghost-btn" to="/admin">Admin</Link>}
                 <button className="ghost-btn" onClick={handleLogout}>Logout</button>
               </>
             ) : (

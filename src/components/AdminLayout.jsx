@@ -1,4 +1,4 @@
-import { Link, NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../state'
 
 export default function AdminLayout() {
@@ -28,8 +28,6 @@ export default function AdminLayout() {
           <NavLink end to="/admin">Tong quan</NavLink>
           <NavLink to="/admin/products">San pham</NavLink>
           <NavLink to="/admin/orders">Don hang</NavLink>
-          <NavLink to="/admin/chat">Live chat</NavLink>
-          <Link to="/">Xem trang shop</Link>
         </nav>
 
         <button className="ghost-btn admin-logout" onClick={handleLogout}>Dang xuat</button>

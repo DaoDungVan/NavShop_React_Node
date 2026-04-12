@@ -39,7 +39,6 @@ export default function AdminOverview() {
       <div className="overview-links">
         <Link className="solid-btn" to="/admin/products">Quan ly san pham</Link>
         <Link className="ghost-btn" to="/admin/orders">Xem don hang</Link>
-        <Link className="ghost-btn" to="/admin/chat">Mo live chat</Link>
       </div>
     </section>
   )

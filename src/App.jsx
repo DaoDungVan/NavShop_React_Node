@@ -10,7 +10,6 @@ import { OrderDetail, OrdersPage } from './pages/OrdersPage'
 import CheckoutSuccess from './pages/CheckoutSuccess'
 import AdminProducts from './pages/AdminProducts'
 import AdminOrders from './pages/AdminOrders'
-import AdminChat from './pages/AdminChat'
 import AdminOverview from './pages/AdminOverview'
 
 export default function App() {
@@ -32,7 +31,6 @@ export default function App() {
         <Route path="products" element={<AdminProducts />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="orders/:id" element={<OrderDetail />} />
-        <Route path="chat" element={<AdminChat />} />
       </Route>
 
       <Route path="/login" element={<Login />} />
