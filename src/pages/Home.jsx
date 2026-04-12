@@ -36,11 +36,11 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-copy">
           <span className="eyebrow">NavShop Monitor</span>
-          <h1>Chọn màn hình đúng nhu cầu, đặt hàng trong vài bước.</h1>
-          <p>Gaming tốc độ cao, OLED màu sâu, màn hình đồ họa chuẩn màu và lựa chọn văn phòng gọn bàn.</p>
+          <h1>Chon man hinh dung nhu cau, dat hang trong vai buoc.</h1>
+          <p>Gaming toc do cao, OLED mau sau, man hinh do hoa chuan mau va lua chon van phong gon ban.</p>
           <div className="hero-actions">
-            <a href="#products" className="solid-btn">Xem sản phẩm</a>
-            <Link to="/cart" className="ghost-btn light">Kiểm tra giỏ hàng</Link>
+            <a href="#products" className="solid-btn">Xem san pham</a>
+            <Link to="/cart" className="ghost-btn light">Kiem tra gio hang</Link>
           </div>
         </div>
         <div className="hero-showcase">
@@ -49,53 +49,53 @@ export default function Home() {
       </section>
 
       <section className="feature-strip">
-        <div><strong>2H</strong><span>Tư vấn phản hồi nhanh</span></div>
-        <div><strong>24M</strong><span>Bảo hành chính hãng</span></div>
-        <div><strong>0%</strong><span>Hỗ trợ trả góp</span></div>
+        <div><strong>2H</strong><span>Tu van phan hoi nhanh</span></div>
+        <div><strong>24M</strong><span>Bao hanh chinh hang</span></div>
+        <div><strong>0%</strong><span>Ho tro tra gop</span></div>
       </section>
 
       <section id="products" className="shop-section">
         <div className="section-title">
           <span>Catalog</span>
-          <h2>Màn hình nổi bật</h2>
+          <h2>Man hinh noi bat</h2>
         </div>
 
         <div className="filter-bar">
-          <input name="keyword" value={filters.keyword} onChange={updateFilter} placeholder="Tìm theo tên màn hình" />
+          <input name="keyword" value={filters.keyword} onChange={updateFilter} placeholder="Tim theo ten man hinh" />
           <select name="brand" value={filters.brand} onChange={updateFilter}>
-            <option value="">Tất cả hãng</option>
+            <option value="">Tat ca hang</option>
             {brands.map((brand) => <option value={brand} key={brand}>{brand}</option>)}
           </select>
           <select name="size" value={filters.size} onChange={updateFilter}>
-            <option value="">Kích thước</option>
+            <option value="">Kich thuoc</option>
             <option value="24">24 inch</option>
             <option value="27">27 inch</option>
             <option value="32">32 inch</option>
           </select>
           <select name="resolution" value={filters.resolution} onChange={updateFilter}>
-            <option value="">Độ phân giải</option>
+            <option value="">Do phan giai</option>
             <option value="FHD">FHD</option>
             <option value="2K">2K</option>
             <option value="4K">4K</option>
           </select>
           <select name="panel" value={filters.panel} onChange={updateFilter}>
-            <option value="">Tấm nền</option>
+            <option value="">Tam nen</option>
             <option value="IPS">IPS</option>
             <option value="VA">VA</option>
             <option value="OLED">OLED</option>
           </select>
           <select name="sort_price" value={filters.sort_price} onChange={updateFilter}>
-            <option value="">Sắp xếp</option>
-            <option value="asc">Giá tăng</option>
-            <option value="desc">Giá giảm</option>
+            <option value="">Sap xep</option>
+            <option value="asc">Gia tang</option>
+            <option value="desc">Gia giam</option>
           </select>
           <button onClick={() => setFilters(defaultFilters)}>Reset</button>
         </div>
 
         {loading ? (
-          <div className="empty-state">Đang tải sản phẩm...</div>
+          <div className="empty-state">Dang tai san pham...</div>
         ) : products.length === 0 ? (
-          <div className="empty-state">Không tìm thấy sản phẩm phù hợp.</div>
+          <div className="empty-state">Khong tim thay san pham phu hop.</div>
         ) : (
           <div className="product-grid">
             {products.map((product) => <ProductCard product={product} key={product.id} />)}

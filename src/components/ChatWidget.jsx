@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { io } from 'socket.io-client'
 
+const quickStarts = [
+  { label: 'Tu van gaming', message: 'Minh can tu van man hinh gaming.' },
+  { label: 'Bao gia nhanh', message: 'Minh muon duoc bao gia nhanh.' },
+  { label: 'Giao hang', message: 'Cho minh hoi thoi gian giao hang.' },
+]
+
 function bubbleClass(type) {
   if (type === 'visitor') return 'mine'
   if (type === 'system') return 'system'
@@ -41,22 +47,6 @@ export default function ChatWidget() {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, open])
 
-  function sendMessage(event) {
-    event.preventDefault()
-    if (!text.trim() || !conversation) return
-    socket.emit('visitor:message', { conversationId: conversation.id, message: text.trim() }, (response) => {
-      if (response?.conversation) setConversation(response.conversation)
-    })
-    setText('')
-  }
-
-  function requestAdmin() {
-    if (!conversation) return
-    socket.emit('visitor:requestAdmin', { conversationId: conversation.id }, (response) => {
-      if (response?.conversation) setConversation(response.conversation)
-    })
-  }
-
   function saveName(value) {
     setName(value)
     localStorage.setItem('navshop_chat_name', value)
@@ -69,6 +59,27 @@ export default function ChatWidget() {
     })
   }
 
+  function emitMessage(message) {
+    if (!message.trim() || !conversation) return
+    socket.emit('visitor:message', { conversationId: conversation.id, message: message.trim() }, (response) => {
+      if (response?.conversation) setConversation(response.conversation)
+    })
+  }
+
+  function sendMessage(event) {
+    event.preventDefault()
+    if (!text.trim()) return
+    emitMessage(text)
+    setText('')
+  }
+
+  function requestAdmin() {
+    if (!conversation) return
+    socket.emit('visitor:requestAdmin', { conversationId: conversation.id }, (response) => {
+      if (response?.conversation) setConversation(response.conversation)
+    })
+  }
+
   return (
     <div className="chat-floating">
       {open && (
@@ -76,14 +87,22 @@ export default function ChatWidget() {
           <div className="chat-head">
             <div>
               <strong>NavShop Support</strong>
-              <span>{conversation?.status === 'admin' ? 'Admin đang hỗ trợ' : 'NavBot trả lời trước'}</span>
+              <span>{conversation?.status === 'admin' ? 'Admin dang ho tro' : 'NavBot tra loi truoc'}</span>
             </div>
-            <button onClick={() => setOpen(false)} aria-label="Close chat">×</button>
+            <button onClick={() => setOpen(false)} aria-label="Dong chat">x</button>
           </div>
 
           <div className="chat-name-row">
-            <input value={name} onChange={(event) => saveName(event.target.value)} onBlur={persistName} placeholder="Tên của bạn" />
-            <button onClick={requestAdmin}>Chat với admin</button>
+            <input value={name} onChange={(event) => saveName(event.target.value)} onBlur={persistName} placeholder="Ten cua ban" />
+            <button onClick={requestAdmin}>Chat voi admin</button>
+          </div>
+
+          <div className="chat-shortcuts">
+            {quickStarts.map((item) => (
+              <button key={item.label} type="button" onClick={() => emitMessage(item.message)}>
+                {item.label}
+              </button>
+            ))}
           </div>
 
           <div className="chat-messages">
@@ -97,8 +116,8 @@ export default function ChatWidget() {
           </div>
 
           <form className="chat-form" onSubmit={sendMessage}>
-            <input value={text} onChange={(event) => setText(event.target.value)} placeholder="Nhập tin nhắn..." />
-            <button>Gửi</button>
+            <input value={text} onChange={(event) => setText(event.target.value)} placeholder="Nhap tin nhan..." />
+            <button>Gui</button>
           </form>
         </section>
       )}

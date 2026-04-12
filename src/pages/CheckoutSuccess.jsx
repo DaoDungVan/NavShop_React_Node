@@ -7,11 +7,11 @@ export default function CheckoutSuccess() {
     <section className="page-shell narrow-page">
       <div className="success-box">
         <span className="eyebrow">Order created</span>
-        <h1>Đặt hàng thành công</h1>
-        <p>Mã đơn của bạn là #{id}. Admin sẽ liên hệ theo số điện thoại trong thông tin giao hàng.</p>
+        <h1>Dat hang thanh cong</h1>
+        <p>Ma don cua ban la #{id}. Admin se lien he theo so dien thoai trong thong tin giao hang.</p>
         <div className="hero-actions">
-          <Link className="solid-btn" to="/">Tiếp tục mua sắm</Link>
-          <Link className="ghost-btn" to="/login">Đăng nhập để xem đơn</Link>
+          <Link className="solid-btn" to="/">Tiep tuc mua sam</Link>
+          <Link className="ghost-btn" to="/login">Dang nhap de xem don</Link>
         </div>
       </div>
     </section>

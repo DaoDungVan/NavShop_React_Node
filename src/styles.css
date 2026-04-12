@@ -737,31 +737,91 @@ textarea:focus {
   color: #64748b;
 }
 
+.admin-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+  background: #eef2f6;
+}
+
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px 18px;
+}
+
+.admin-brand strong,
+.admin-brand small {
+  display: block;
+}
+
+.admin-brand small {
+  color: #94a3b8;
+}
+
+.admin-main {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 28px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-topbar strong,
+.admin-topbar span {
+  display: block;
+}
+
+.admin-topbar span {
+  color: #64748b;
+}
+
+.admin-content {
+  padding: 26px 28px 32px;
+}
+
 .admin-layout {
   grid-template-columns: 220px minmax(0, 1fr);
 }
 
 .admin-sidebar {
-  position: sticky;
-  top: 104px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 20px;
+  background: #0f172a;
+}
+
+.admin-menu {
   display: grid;
   gap: 8px;
-  padding: 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background: #ffffff;
 }
 
 .admin-sidebar a {
   padding: 12px;
   border-radius: 8px;
-  color: #334155;
+  color: #cbd5e1;
   font-weight: 800;
 }
 
+.admin-sidebar a.active,
 .admin-sidebar a:hover {
-  color: #d71920;
-  background: #fff1f2;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.admin-logout {
+  width: 100%;
+  margin-top: 12px;
 }
 
 .admin-form {
@@ -795,6 +855,38 @@ textarea:focus {
 
 .admin-grid {
   display: grid;
+  gap: 12px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.overview-card {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+.overview-card strong,
+.overview-card span {
+  display: block;
+}
+
+.overview-card strong {
+  margin-bottom: 6px;
+  color: #d71920;
+  font-size: 36px;
+}
+
+.overview-links {
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
 }
 
@@ -869,6 +961,10 @@ td a {
   min-height: 620px;
 }
 
+.admin-chat-page .section-title {
+  margin-bottom: 16px;
+}
+
 .chat-list {
   overflow: hidden;
 }
@@ -922,7 +1018,7 @@ td a {
 
 .admin-chat-window {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
   min-height: 620px;
   overflow: hidden;
 }
@@ -943,6 +1039,36 @@ td a {
 
 .admin-chat-head span {
   color: #64748b;
+}
+
+.reply-templates {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.reply-templates strong {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.reply-template-list,
+.chat-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reply-template-list button,
+.chat-shortcuts button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #d9e0e8;
+  border-radius: 999px;
+  color: #334155;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .chat-floating {
@@ -1034,6 +1160,11 @@ td a {
 
 .chat-name-row button {
   min-height: 40px;
+}
+
+.chat-shortcuts {
+  padding: 0 12px 12px;
+  background: #f8fafc;
 }
 
 .chat-messages {
@@ -1128,18 +1259,24 @@ td a {
   .cart-layout,
   .profile-layout,
   .admin-layout,
-  .admin-chat {
+  .admin-chat,
+  .admin-shell {
     grid-template-columns: 1fr;
   }
 
   .filter-bar,
-  .product-grid {
+  .product-grid,
+  .overview-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .checkout-box,
   .admin-sidebar {
     position: static;
+  }
+
+  .admin-content {
+    padding: 20px;
   }
 }
 
@@ -1165,6 +1302,7 @@ td a {
   .feature-strip,
   .filter-bar,
   .product-grid,
+  .overview-grid,
   .spec-grid,
   .auth-page,
   .admin-form {
@@ -1193,6 +1331,12 @@ td a {
   .cart-item button,
   .admin-product button {
     grid-column: 2;
+  }
+
+  .admin-topbar,
+  .admin-content {
+    padding-right: 16px;
+    padding-left: 16px;
   }
 
   .chat-floating {

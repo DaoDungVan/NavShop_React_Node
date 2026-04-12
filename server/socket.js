@@ -7,23 +7,39 @@ const jwtSecret = process.env.JWT_SECRET || 'dev_navshop_secret'
 function botReply(message) {
   const text = message.toLowerCase()
 
-  if (text.includes('gia') || text.includes('giá') || text.includes('price')) {
-    return 'Bạn có thể lọc theo giá ở trang Shop. Nếu cần báo giá chính xác, mình sẽ chuyển admin hỗ trợ.'
+  if (text.includes('gia') || text.includes('price') || text.includes('bao nhieu')) {
+    return 'Ban co the loc theo gia ngay tren trang Shop cua NavShop. Neu muon bao gia nhanh theo nhu cau gaming, van phong hoac do hoa, minh se chuyen admin ho tro.'
+  }
+
+  if (text.includes('gaming')) {
+    return 'Voi nhu cau gaming, NavShop co cac mau 24 den 32 inch, FHD, 2K va OLED. Ban co the nhan them tam gia mong muon de minh goi y dung nhom san pham.'
+  }
+
+  if (text.includes('do hoa') || text.includes('design')) {
+    return 'Neu ban lam do hoa hoac edit, nen uu tien man hinh IPS hoac OLED co do phan giai 2K tro len. Admin co the tu van mau phu hop hon neu ban muon.'
+  }
+
+  if (text.includes('van phong') || text.includes('office')) {
+    return 'Voi nhu cau hoc tap va van phong, ban nen uu tien man hinh IPS 24 den 27 inch, do phan giai FHD hoac 2K de de nhin va toi uu chi phi.'
   }
 
   if (text.includes('ship') || text.includes('giao')) {
-    return 'Thời gian giao hàng phụ thuộc địa chỉ nhận hàng. Bạn có thể chat với admin để kiểm tra chi tiết.'
+    return 'Thoi gian giao hang phu thuoc vao dia chi nhan. Ban gui khu vuc nhan hang hoac bam Chat voi admin de duoc kiem tra cu the.'
   }
 
-  if (text.includes('order') || text.includes('đơn') || text.includes('don')) {
-    return 'Nếu đã đăng nhập, bạn xem đơn trong My Orders. Nếu cần kiểm tra đơn cụ thể, hãy chuyển sang admin.'
+  if (text.includes('bao hanh') || text.includes('warranty')) {
+    return 'NavShop ban hang chinh hang va bao hanh theo hang. Neu can kiem tra chinh sach theo tung mau man hinh, minh se chuyen admin ho tro.'
   }
 
-  if (text.includes('admin') || text.includes('nhân viên') || text.includes('tu van') || text.includes('tư vấn')) {
+  if (text.includes('order') || text.includes('don')) {
+    return 'Neu da dang nhap, ban co the xem don trong muc My Orders. Neu can kiem tra don cu the, ban hay chuyen sang admin.'
+  }
+
+  if (text.includes('admin') || text.includes('nhan vien') || text.includes('tu van')) {
     return null
   }
 
-  return 'Mình là NavBot. Mình có thể hỗ trợ thông tin màn hình, giá, giao hàng và đơn hàng. Bạn cũng có thể bấm Chat với admin.'
+  return 'Minh la NavBot. Minh co the ho tro thong tin man hinh, gia, giao hang, bao hanh va don hang. Ban cung co the bam Chat voi admin ngay trong khung chat nay.'
 }
 
 async function addMessage(conversationId, senderType, senderName, message) {
@@ -60,7 +76,7 @@ async function getOrCreateConversation(visitorToken, visitorName = 'Guest') {
     result.insertId,
     'bot',
     'NavBot',
-    'Xin chào, mình là NavBot. Bạn cần tư vấn màn hình, giá, giao hàng hay muốn gặp admin?',
+    'Xin chao, minh la NavBot. Ban can tu van man hinh, bao gia, giao hang hay muon gap admin?',
   )
 
   const [[conversation]] = await pool.query('SELECT * FROM chat_conversations WHERE id = ?', [result.insertId])
@@ -118,7 +134,7 @@ export function registerChat(io) {
           const reply = botReply(message)
           if (reply === null) {
             await pool.query("UPDATE chat_conversations SET status = 'waiting' WHERE id = ?", [conversation.id])
-            const systemMessage = await addMessage(conversation.id, 'system', 'System', 'Đã chuyển cuộc chat sang admin. Bạn đợi phản hồi tại đây nhé.')
+            const systemMessage = await addMessage(conversation.id, 'system', 'System', 'Da chuyen cuoc chat sang admin. Ban doi phan hoi tai day nhe.')
             io.to(`chat:${conversation.id}`).emit('chat:message', systemMessage)
             io.to('admins').emit('admin:conversations', await conversationList())
           } else {
@@ -137,7 +153,7 @@ export function registerChat(io) {
     socket.on('visitor:requestAdmin', async ({ conversationId }, callback) => {
       try {
         await pool.query("UPDATE chat_conversations SET status = 'waiting' WHERE id = ?", [conversationId])
-        const msg = await addMessage(conversationId, 'system', 'System', 'Đã chuyển cuộc chat sang admin. Bạn đợi phản hồi tại đây nhé.')
+        const msg = await addMessage(conversationId, 'system', 'System', 'Da chuyen cuoc chat sang admin. Ban doi phan hoi tai day nhe.')
         io.to(`chat:${conversationId}`).emit('chat:message', msg)
         io.to('admins').emit('admin:conversations', await conversationList())
         const [[conversation]] = await pool.query('SELECT * FROM chat_conversations WHERE id = ?', [conversationId])
@@ -178,7 +194,7 @@ export function registerChat(io) {
       const user = getUser(socket)
       if (!user || user.role !== 'admin') return callback?.({ ok: false })
       await pool.query("UPDATE chat_conversations SET status = 'closed' WHERE id = ?", [conversationId])
-      const msg = await addMessage(conversationId, 'system', 'System', 'Admin đã đóng cuộc chat.')
+      const msg = await addMessage(conversationId, 'system', 'System', 'Admin da dong cuoc chat.')
       io.to(`chat:${conversationId}`).emit('chat:message', msg)
       io.to('admins').emit('admin:conversations', await conversationList())
       callback?.({ ok: true })
