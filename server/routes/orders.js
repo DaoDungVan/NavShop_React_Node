@@ -16,7 +16,7 @@ router.post('/', authOptional, async (req, res) => {
     return res.status(422).json({ message: 'Cart is invalid.' })
   }
 
-  const [products] = await pool.query(`SELECT * FROM products WHERE id IN (${ids.map(() => '?').join(',')})`, ids)
+  const [products] = await pool.query(`SELECT id, name, price FROM products WHERE id IN (${ids.map(() => '?').join(',')})`, ids)
   const byId = new Map(products.map((product) => [Number(product.id), product]))
 
   let total = 0

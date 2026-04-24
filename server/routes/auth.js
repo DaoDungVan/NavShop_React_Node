@@ -2,15 +2,14 @@ import express from 'express'
 import bcrypt from 'bcryptjs'
 import { pool } from '../db.js'
 import { authRequired, signUser } from '../middleware/auth.js'
-import { imageUpload, publicUploadPath } from '../upload.js'
+import { serializeUser, uploadedImagePayload, userAuthSelectFields, userSelectFields } from '../media.js'
+import { imageUpload } from '../upload.js'
 
 const router = express.Router()
 const avatarUpload = imageUpload('avatars')
 
 function sanitizeUser(user) {
-  if (!user) return null
-  const { password: _password, ...safeUser } = user
-  return safeUser
+  return serializeUser(user)
 }
 
 router.post('/register', async (req, res) => {
@@ -34,23 +33,43 @@ router.post('/register', async (req, res) => {
     "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'user')",
     [name, email, hash],
   )
-  const [[user]] = await pool.query('SELECT * FROM users WHERE id = ?', [result.insertId])
-  res.status(201).json({ user: sanitizeUser(user), token: signUser(user) })
+  const [[user]] = await pool.query(`SELECT ${userSelectFields} FROM users WHERE id = ?`, [result.insertId])
+  const safeUser = sanitizeUser(user)
+  res.status(201).json({ user: safeUser, token: signUser(safeUser) })
 })
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body
 
-  const [[user]] = await pool.query('SELECT * FROM users WHERE email = ?', [email || ''])
+  const [[user]] = await pool.query(`SELECT ${userAuthSelectFields} FROM users WHERE email = ?`, [email || ''])
   if (!user || !(await bcrypt.compare(password || '', user.password))) {
     return res.status(401).json({ message: 'Invalid email or password.' })
   }
 
-  res.json({ user: sanitizeUser(user), token: signUser(user) })
+  const safeUser = sanitizeUser(user)
+  res.json({ user: safeUser, token: signUser(safeUser) })
+})
+
+router.get('/avatar/:id', async (req, res) => {
+  const [[user]] = await pool.query('SELECT avatar, avatar_mime, avatar_data FROM users WHERE id = ?', [req.params.id])
+  if (!user) return res.status(404).json({ message: 'User not found.' })
+
+  if (user.avatar_data) {
+    res.type(user.avatar_mime || 'image/jpeg')
+    res.set('Cache-Control', 'public, max-age=86400')
+    return res.end(user.avatar_data)
+  }
+
+  if (user.avatar) {
+    const target = user.avatar.startsWith('http') ? user.avatar : `/${user.avatar.replace(/^\/+/, '')}`
+    return res.redirect(target)
+  }
+
+  return res.status(404).json({ message: 'Avatar not found.' })
 })
 
 router.get('/me', authRequired, async (req, res) => {
-  const [[user]] = await pool.query('SELECT * FROM users WHERE id = ?', [req.user.id])
+  const [[user]] = await pool.query(`SELECT ${userSelectFields} FROM users WHERE id = ?`, [req.user.id])
   res.json({ user: sanitizeUser(user) })
 })
 
@@ -67,15 +86,23 @@ router.put('/profile', authRequired, avatarUpload.single('avatar'), async (req, 
   }
 
   const [[current]] = await pool.query('SELECT avatar FROM users WHERE id = ?', [req.user.id])
-  const avatar = req.file ? publicUploadPath('avatars', req.file) : current.avatar
+  const uploadedAvatar = uploadedImagePayload(req.file)
 
-  await pool.query(
-    'UPDATE users SET name = ?, phone = ?, address = ?, gender = ?, avatar = ? WHERE id = ?',
-    [name, phone || null, address || null, cleanGender, avatar, req.user.id],
-  )
+  if (uploadedAvatar) {
+    await pool.query(
+      'UPDATE users SET name = ?, phone = ?, address = ?, gender = ?, avatar = ?, avatar_mime = ?, avatar_data = ? WHERE id = ?',
+      [name, phone || null, address || null, cleanGender, null, uploadedAvatar.mimeType, uploadedAvatar.data, req.user.id],
+    )
+  } else {
+    await pool.query(
+      'UPDATE users SET name = ?, phone = ?, address = ?, gender = ?, avatar = ? WHERE id = ?',
+      [name, phone || null, address || null, cleanGender, current.avatar, req.user.id],
+    )
+  }
 
-  const [[user]] = await pool.query('SELECT * FROM users WHERE id = ?', [req.user.id])
-  res.json({ user: sanitizeUser(user), token: signUser(user) })
+  const [[user]] = await pool.query(`SELECT ${userSelectFields} FROM users WHERE id = ?`, [req.user.id])
+  const safeUser = sanitizeUser(user)
+  res.json({ user: safeUser, token: signUser(safeUser) })
 })
 
 router.put('/password', authRequired, async (req, res) => {

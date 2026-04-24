@@ -5,7 +5,7 @@ This repo is prepared for Render with:
 - 1 web service for the React app + Node API + Socket.IO
 - 1 private MySQL service
 - 1 disk for MySQL data
-- 1 disk for uploaded images in `server/uploads`
+- product and avatar images stored in MySQL
 
 ## Before you start
 
@@ -45,7 +45,6 @@ This repo is prepared for Render with:
 - Build command: `npm ci && npm run build`
 - Start command: `npm start`
 - Health check: `/api/health`
-- Upload disk mount: `/opt/render/project/src/server/uploads`
 
 ## After the first deploy
 
@@ -105,8 +104,7 @@ Usually one restart is enough after MySQL becomes healthy.
 
 ## Important notes
 
-- Uploaded images live in `server/uploads`, so the upload disk must stay attached.
-- If you remove the upload disk, uploaded files will disappear on restart/redeploy.
+- Uploaded product and avatar images are stored in MySQL blobs.
 - If you remove the MySQL disk, database data will be lost.
 - This setup uses same-origin hosting: frontend, API, uploads, and Socket.IO are all served from the same Render web service URL.
 
@@ -126,8 +124,7 @@ If Blueprint setup fails for any reason, create services manually in this order:
    - Build command: `npm ci && npm run build`
    - Start command: `npm start`
    - Health check path: `/api/health`
-6. Attach a 10 GB disk at `/opt/render/project/src/server/uploads`.
-7. Add env vars:
+6. Add env vars:
    - `DB_HOST=<internal mysql hostname from Render>`
    - `DB_PORT=3306`
    - `DB_NAME=navshop_react`

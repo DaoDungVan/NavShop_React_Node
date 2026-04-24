@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { api } from '../api'
+import { api, imageUrl } from '../api'
 import ProductCard from '../components/ProductCard'
 
 const defaultFilters = {
@@ -26,6 +26,10 @@ export default function Home() {
   }, [filters])
 
   const brands = useMemo(() => [...new Set(products.map((item) => item.brand))].sort(), [products])
+  const heroProduct = useMemo(
+    () => products.find((item) => item.name.includes('PG27AQWP')) || products[0] || null,
+    [products],
+  )
 
   function updateFilter(event) {
     setFilters((current) => ({ ...current, [event.target.name]: event.target.value }))
@@ -44,7 +48,7 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-showcase">
-          <img src="/uploads/products/1770144249_asus_pg27aqwp-w_gearvn_ffffe2baa33b4f9092cbe4b7c94a4399_master.jpg" alt="OLED gaming monitor" />
+          <img src={imageUrl(heroProduct?.image)} alt={heroProduct?.name || 'OLED gaming monitor'} />
         </div>
       </section>
 

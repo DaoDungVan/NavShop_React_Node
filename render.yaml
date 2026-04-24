@@ -55,7 +55,3 @@ services:
         value: 60
       - key: DB_CONNECT_RETRY_MS
         value: 5000
-    disk:
-      name: uploads
-      mountPath: /opt/render/project/src/server/uploads
-      sizeGB: 10
