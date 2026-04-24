@@ -5,7 +5,7 @@ services:
     plan: starter
     region: singapore
     image:
-      url: docker.io/mysql:8.4
+      url: docker.io/library/mysql:8.4
     envVars:
       - key: MYSQL_DATABASE
         value: navshop_react
